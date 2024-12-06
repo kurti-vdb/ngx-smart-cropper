@@ -112,5 +112,5 @@ This project uses beautiful, customizable, and free [Tabler Icons](https://table
 
 
 ## Feedback and contributions
-Feel free to open issues or contribute enhancements on [GitHub](https://github.com/kurti.vdb/ngx-smart-cropper).
+Feel free to open issues or contribute enhancements on [GitHub](https://github.com/kurti-vdb/ngx-smart-cropper).
 
