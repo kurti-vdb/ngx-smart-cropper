@@ -1,0 +1,123 @@
+<div class="cropper-container">
+  <div
+    class="background"
+    *ngIf="imageSource"
+    [ngStyle]="{ '--background-image': 'url(' + imageSource + ')', '--width': imagePreviewWidth + 'px' }">
+    <svg class="svg-defs">
+      <defs>
+        <clipPath id="clipper">
+          <rect
+            #cropRect
+            [attr.x]="cropX"
+            [attr.y]="cropY"
+            [attr.width]="cropWidth"
+            [attr.height]="cropHeight"
+          ></rect>
+        </clipPath>
+      </defs>
+    </svg>
+    <img #image [src]="imageSource"/>
+    <div
+      class="handle top-left"
+      [ngClass]="theme"
+      [style.left.px]="cropX - 8"
+      [style.top.px]="cropY - 8"
+      (mousedown)="onResizeStart($event, 'top-left')"
+      (touchstart)="onTouchResizeStart($event, 'top-left')"
+    ></div>
+    <div
+      class="handle top-middle"
+      [ngClass]="theme"
+      [style.left.px]="cropX + cropWidth / 2 - 16"
+      [style.top.px]="cropY - 8"
+      (mousedown)="onResizeStart($event, 'top-middle')"
+      (touchstart)="onTouchResizeStart($event, 'top-middle')"
+    ></div>
+    <div
+      class="handle top-right"
+      [ngClass]="theme"
+      [style.left.px]="cropX + cropWidth - 8"
+      [style.top.px]="cropY - 8"
+      (mousedown)="onResizeStart($event, 'top-right')"
+      (touchstart)="onTouchResizeStart($event, 'top-right')"
+    ></div>
+    <div
+      class="handle middle-left"
+      [ngClass]="theme"
+      [style.left.px]="cropX - 8"
+      [style.top.px]="cropY + cropHeight / 2 - 16"
+      (mousedown)="onResizeStart($event, 'middle-left')"
+      (touchstart)="onTouchResizeStart($event, 'middle-left')"
+    ></div>
+    <div
+      class="handle middle-right"
+      [ngClass]="theme"
+      [style.left.px]="cropX + cropWidth - 8"
+      [style.top.px]="cropY + cropHeight / 2 - 16"
+      (mousedown)="onResizeStart($event, 'middle-right')"
+      (touchstart)="onTouchResizeStart($event, 'middle-right')"
+    ></div>
+    <div
+      class="handle bottom-left"
+      [ngClass]="theme"
+      [style.left.px]="cropX - 8"
+      [style.top.px]="cropY + cropHeight - 8"
+      (mousedown)="onResizeStart($event, 'bottom-left')"
+      (touchstart)="onTouchResizeStart($event, 'bottom-left')"
+    ></div>
+    <div
+      class="handle bottom-middle"
+      [ngClass]="theme"
+      [style.left.px]="cropX + cropWidth / 2 - 16"
+      [style.top.px]="cropY + cropHeight - 8"
+      (mousedown)="onResizeStart($event, 'bottom-middle')"
+      (touchstart)="onTouchResizeStart($event, 'bottom-middle')"
+    ></div>
+    <div
+      class="handle bottom-right"
+      [ngClass]="theme"
+      [style.left.px]="cropX + cropWidth - 8"
+      [style.top.px]="cropY + cropHeight - 8"
+      (mousedown)="onResizeStart($event, 'bottom-right')"
+      (touchstart)="onTouchResizeStart($event, 'bottom-right')"
+    ></div>
+    <div
+      class="crop-mask"
+      (mousedown)="onDragStart($event)"
+      (touchstart)="onTouchDragStart($event)"
+      [style.left.px]="cropX"
+      [style.top.px]="cropY"
+      [style.width.px]="cropWidth"
+      [style.height.px]="cropHeight"
+      [ngClass]="theme"
+    >
+    <div class="grid-overlay" [ngClass]="{ 'grid-visible': showGrid }">
+      <div class="grid-row">
+        <div class="grid-cell" [ngClass]="theme"></div>
+        <div class="grid-cell" [ngClass]="theme"></div>
+        <div class="grid-cell" [ngClass]="theme"></div>
+      </div>
+      <div class="grid-row">
+        <div class="grid-cell" [ngClass]="theme"></div>
+        <div class="grid-cell" [ngClass]="theme"></div>
+        <div class="grid-cell" [ngClass]="theme"></div>
+      </div>
+      <div class="grid-row">
+        <div class="grid-cell" [ngClass]="theme"></div>
+        <div class="grid-cell" [ngClass]="theme"></div>
+        <div class="grid-cell" [ngClass]="theme"></div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="buttons" *ngIf="imageSource">
+    <div class="btn" (click)="clearImage()">
+      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16z" /><path d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z" /></svg>
+    </div>
+    <div class="btn" (click)="cropImage()">
+      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" />
+      </svg>
+    </div>
+  </div>
+</div>
+
