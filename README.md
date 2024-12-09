@@ -2,7 +2,7 @@
 
 The **ngx-smart-cropper** component is an angular standalone component that allows users to upload, crop, and resize images with ease. It provides intuitive drag-and-resize functionality, grid overlays, and supports various aspect ratios and output formats.
 
-<img src="https://upsights.fra1.digitaloceanspaces.com/ngx-smart-cropper/assets/images/michele.png" width="800" >
+<img src="https://upsights.fra1.digitaloceanspaces.com/ngx-smart-cropper/assets/images/michele-ngx-smart-cropper.jpg" width="800" alt="ngx-smart-cropper">
 
 ## Features
 - Upload and preview images.
