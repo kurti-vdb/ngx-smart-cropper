@@ -40,8 +40,8 @@ export class ImageCropperComponent implements OnChanges {
   @Input() whitePixelThreshold = 20;
   @Input() imageSource: string | null = null;
   @Input() imageChangedEvent: Event | null = null;
-  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
-  @Input() imageType: 'png' | 'jpeg' | 'webp' = 'webp';
+  @Input() theme: 'light' | 'dark' | 'mixed' | 'auto' = 'auto';
+  @Input() imageType: 'png' | 'jpeg' | 'avif'| 'webp' = 'webp';
 
   @Output() imageCroppedEvent = new EventEmitter<string>();
 
@@ -72,12 +72,14 @@ export class ImageCropperComponent implements OnChanges {
   }
 
   onTouchDragStart(event: TouchEvent): void {
+    event.preventDefault();
     this.isDragging = true;
     this.startX = event.touches[0].clientX - this.cropX;
     this.startY = event.touches[0].clientY - this.cropY;
   }
 
   onTouchResizeStart(event: TouchEvent, handle: string): void {
+    event.preventDefault();
     this.isResizing = true;
     this.currentHandle = handle;
     this.startX = event.touches[0].clientX;

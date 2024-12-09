@@ -37,7 +37,7 @@ npm install ngx-smart-cropper --save
   [cropY]="50"
   [cropWidth]="400"
   [cropHeight]="300"
-  [theme]="'dark'"
+  [theme]="'mixed'"
   [imageSource]="imageSource"
   (imageCroppedEvent)="imageCropped($event)"
 ></ngx-smart-cropper>
@@ -87,15 +87,14 @@ export class MyComponent {
 ### Inputs
 
 | Input               | Type               | Default | Description                                              |
-|---------------------|--------------------|---------|----------------------------------------------------------|
-| `cropX`             | `number`           | `50`    | Initial crop area x-coordinate.                          |
-| `cropY`             | `number`           | `50`    | Initial crop area y-coordinate.                          |
-| `cropWidth`         | `number`           | `150`   | Initial crop width.                                      |
-| `cropHeight`        | `number`           | `150`   | Initial crop height.                                     |
-| `imageType`         | `'png' \| 'jpeg' \| 'webp' ` | `'webp'`   | File type for the cropped image.                       |
-| `theme`         | `'light' \| 'dark' \| 'auto' ` | `'auto'`   | The theme property automatically adjusts the UI theme between light and dark modes based on the image content. When set to 'auto', it detects the proportion of white pixels in the image and switches to a dark theme if the image contains a high percentage of light pixels, ensuring optimal visibility and contrast.                      |
+|---------------------|-------------------------|---------|----------------------------------------------------------|
+| `cropX`             | `number`                | `50`    | Initial crop area x-coordinate.                          |
+| `cropY`             | `number`                | `50`    | Initial crop area y-coordinate.                          |
+| `cropWidth`         | `number`                | `150`   | Initial crop width.                                      |
+| `cropHeight`        | `number`                | `150`   | Initial crop height.                                     |
+| `imageType`         | `'png' \| 'jpeg'  \| 'avif' \| 'webp' ` | `'webp'`   | File type for the cropped image.                       |
+| `theme`         | `'light' \| 'dark' \| 'mixed' \| 'auto'` | `'auto'`   | The theme property automatically adjusts the UI theme between light and dark modes based on the image content. When set to 'auto', it detects the proportion of white pixels in the image and switches to a dark theme if the image contains a high percentage of light pixels, ensuring optimal visibility and contrast.                      |
 | `whitePixelThreshold`        | `number`           | `20`   | Threshold number for switching between dark and light mode when theme is set to auto.                                     |
-| `imagePreviewWidth`             | `number`           | `800`    | Preview image width in pixels                          |
 
 ### Outputs
 

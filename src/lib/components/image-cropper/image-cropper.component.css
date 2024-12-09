@@ -38,7 +38,7 @@
   width: var(--width, 800px);
   height: auto;
   background-size: 800px auto;
-  border-radius: 15px;;
+  border-radius: 15px;
 }
 .crop-mask {
   position: absolute;
@@ -48,7 +48,7 @@
 .crop-mask.light {
   border: 2px dashed #fff;
 }
-.crop-mask.dark {
+.crop-mask.dark, .crop-mask.mixed {
   border: 2px dashed #000;
 }
 .handle {
@@ -61,7 +61,7 @@
 .handle.light {
   background: #fff;
 }
-.handle.dark {
+.handle.dark, .handle.mixed {
   background: #000;
 }
 .handle.top-left {
@@ -123,6 +123,10 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.9);
 }
 .grid-cell.light {
+  border-right: 1px solid rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+}
+.grid-cell.mixed {
   border-right: 1px solid rgba(255, 255, 255, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.9);
 }
@@ -195,10 +199,9 @@
   transition: all 0.25s;
 }
 
-
 @media (max-width: 600px) {
   .background::before {
-    width: 100%; /* Full width for smaller screens */
-    background-size: cover; /* Adjust to fill mobile screens */
+    width: 100%;
+    background-size: cover;
   }
 }
