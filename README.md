@@ -4,6 +4,8 @@ The **ngx-smart-cropper** component is an angular standalone component that allo
 
 <img src="https://upsights.fra1.digitaloceanspaces.com/ngx-smart-cropper/assets/images/michele-ngx-smart-cropper.jpg" width="800" alt="ngx-smart-cropper">
 
+<a href="https://ngx-smart-cropper.upsights.be">Demo</a>
+
 ## Features
 - Upload and preview images.
 - Intuitive drag-to-crop and resize handles.
@@ -112,4 +114,7 @@ This project uses beautiful, customizable, and free [Tabler Icons](https://table
 
 ## Feedback and contributions
 Feel free to open issues or contribute enhancements on [GitHub](https://github.com/kurti-vdb/ngx-smart-cropper).
+
+## Demo page
+<a href="https://ngx-smart-cropper.upsights.be">Demo</a>
 
