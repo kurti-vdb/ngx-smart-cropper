@@ -13,6 +13,17 @@ The **ngx-smart-cropper** component is an angular standalone component that allo
 - Responsive design and easy-to-integrate.
 - Auto theme detection: Automatically detects the theme (light or dark) based on the image content.
 
+## Compatibility
+
+The `ngx-smart-cropper` library is compatible with the following versions of Angular:
+
+| `ngx-smart-cropper` Version | Supported Angular Versions |
+| --- | --- |
+| `1.1.9` | `^19.0.0` |
+| `1.2.0` | `^20.0.0` |
+
+Note: The library versions are compiled for specific Angular versions and are not backwards compatible.
+
 
 ## Installation
 
