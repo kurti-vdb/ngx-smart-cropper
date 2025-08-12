@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
-  EventEmitter,
-  Host,
   HostListener,
-  Input,
   OnChanges,
-  Output,
   SimpleChanges,
   ViewChild,
+  input,
+  model,
+  output,
+  signal,
 } from '@angular/core';
 
 @Component({
@@ -31,36 +31,37 @@ export class ImageCropperComponent implements OnChanges {
   croppedImageSrc: string | null = null;
   currentHandle: string | null = null;
 
-  @Input() cropX = 50;
-  @Input() cropY = 50;
-  @Input() cropWidth = 150;
-  @Input() cropHeight = 150;
-  @Input() minCropSize = 50;
-  @Input() imagePreviewWidth = 800;
-  @Input() whitePixelThreshold = 20;
-  @Input() imageSource: string | null = null;
-  @Input() imageChangedEvent: Event | null = null;
-  @Input() theme: 'light' | 'dark' | 'mixed' | 'auto' = 'auto';
-  @Input() imageType: 'png' | 'jpeg' | 'avif'| 'webp' = 'webp';
+  cropX = model(50);
+  cropY = model(50);
+  cropWidth = model(150);
+  cropHeight = model(150);
+  imageSource = model<string | null>(null);
+  theme = model<'light' | 'dark' | 'mixed' | 'auto'>('auto');
 
-  @Output() imageCroppedEvent = new EventEmitter<string>();
+  minCropSize = input(50);
+  imagePreviewWidth = input(800);
+  whitePixelThreshold = input(20);
+  imageChangedEvent = input<Event | null>(null);
+  imageType = input<'png' | 'jpeg' | 'avif' | 'webp'>('webp');
+
+  imageCroppedEvent = output<string>();
 
   @ViewChild('cropRect') cropRect!: ElementRef;
   @ViewChild('image') imageElement!: ElementRef<HTMLImageElement>;
 
-  cropperState: { x: number, y: number, width: number, height: number } = { x: this.cropX, y: this.cropY, width: this.cropWidth, height: this.cropHeight };
+  cropperState = signal({ x: 50, y: 50, width: 150, height: 150 });
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['imageSource'] && this.imageSource && this.theme === 'auto') {
-      this.detectWhitePixelsAndSetTheme(this.imageSource!);
+    if (changes['imageSource'] && this.imageSource() && this.theme() === 'auto') {
+      this.detectWhitePixelsAndSetTheme(this.imageSource()!);
     }
   }
 
   onDragStart(event: MouseEvent): void {
     event.preventDefault();
     this.isDragging = true;
-    this.startX = event.clientX - this.cropX;
-    this.startY = event.clientY - this.cropY;
+    this.startX = event.clientX - this.cropX();
+    this.startY = event.clientY - this.cropY();
   }
 
   onResizeStart(event: MouseEvent, handle: string): void {
@@ -74,8 +75,8 @@ export class ImageCropperComponent implements OnChanges {
   onTouchDragStart(event: TouchEvent): void {
     event.preventDefault();
     this.isDragging = true;
-    this.startX = event.touches[0].clientX - this.cropX;
-    this.startY = event.touches[0].clientY - this.cropY;
+    this.startX = event.touches[0].clientX - this.cropX();
+    this.startY = event.touches[0].clientY - this.cropY();
   }
 
   onTouchResizeStart(event: TouchEvent, handle: string): void {
@@ -89,56 +90,54 @@ export class ImageCropperComponent implements OnChanges {
   @HostListener('document:mousemove', ['$event'])
   @HostListener('document:touchmove', ['$event'])
   onMouseMove(event: MouseEvent | TouchEvent): void {
-
     const clientX = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].clientX : (event as MouseEvent).clientX;
     const clientY = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].clientY : (event as MouseEvent).clientY;
 
     if (this.isDragging) {
       this.showGrid = true;
-      this.cropX = clientX - this.startX;
-      this.cropY = clientY - this.startY;
+      this.cropX.set(clientX - this.startX);
+      this.cropY.set(clientY - this.startY);
       this.enforceBounds();
     }
     else if (this.isResizing) {
-
       this.showGrid = true;
       const dx = clientX - this.startX;
       const dy = clientY - this.startY;
 
       switch (this.currentHandle) {
         case 'top-left':
-          this.cropX += dx;
-          this.cropY += dy;
-          this.cropWidth -= dx;
-          this.cropHeight -= dy;
+          this.cropX.set(this.cropX() + dx);
+          this.cropY.set(this.cropY() + dy);
+          this.cropWidth.set(this.cropWidth() - dx);
+          this.cropHeight.set(this.cropHeight() - dy);
           break;
         case 'top-middle':
-          this.cropY += dy;
-          this.cropHeight -= dy;
+          this.cropY.set(this.cropY() + dy);
+          this.cropHeight.set(this.cropHeight() - dy);
           break;
         case 'top-right':
-          this.cropWidth += dx;
-          this.cropY += dy;
-          this.cropHeight -= dy;
+          this.cropWidth.set(this.cropWidth() + dx);
+          this.cropY.set(this.cropY() + dy);
+          this.cropHeight.set(this.cropHeight() - dy);
           break;
         case 'middle-left':
-          this.cropX += dx;
-          this.cropWidth -= dx;
+          this.cropX.set(this.cropX() + dx);
+          this.cropWidth.set(this.cropWidth() - dx);
           break;
         case 'middle-right':
-          this.cropWidth += dx;
+          this.cropWidth.set(this.cropWidth() + dx);
           break;
         case 'bottom-left':
-          this.cropX += dx;
-          this.cropWidth -= dx;
-          this.cropHeight += dy;
+          this.cropX.set(this.cropX() + dx);
+          this.cropWidth.set(this.cropWidth() - dx);
+          this.cropHeight.set(this.cropHeight() + dy);
           break;
         case 'bottom-middle':
-          this.cropHeight += dy;
+          this.cropHeight.set(this.cropHeight() + dy);
           break;
         case 'bottom-right':
-          this.cropWidth += dx;
-          this.cropHeight += dy;
+          this.cropWidth.set(this.cropWidth() + dx);
+          this.cropHeight.set(this.cropHeight() + dy);
           break;
       }
 
@@ -159,46 +158,46 @@ export class ImageCropperComponent implements OnChanges {
 
   enforceBounds(): void {
     const imageBounds = this.imageElement.nativeElement.getBoundingClientRect();
-    this.cropWidth = Math.max(this.minCropSize, this.cropWidth);
-    this.cropHeight = Math.max(this.minCropSize, this.cropHeight);
-    this.cropX = Math.min(Math.max(0, this.cropX), imageBounds.width - this.cropWidth);
-    this.cropY = Math.min(Math.max(0, this.cropY), imageBounds.height - this.cropHeight);
-    if(this.cropHeight >= imageBounds.height) this.cropHeight = imageBounds.height;
-    if(this.cropWidth >= imageBounds.width) this.cropWidth = imageBounds.width;
+    this.cropWidth.set(Math.max(this.minCropSize(), this.cropWidth()));
+    this.cropHeight.set(Math.max(this.minCropSize(), this.cropHeight()));
+    this.cropX.set(Math.min(Math.max(0, this.cropX()), imageBounds.width - this.cropWidth()));
+    this.cropY.set(Math.min(Math.max(0, this.cropY()), imageBounds.height - this.cropHeight()));
+    if (this.cropHeight() >= imageBounds.height) this.cropHeight.set(imageBounds.height);
+    if (this.cropWidth() >= imageBounds.width) this.cropWidth.set(imageBounds.width);
   }
 
   setDefaultCropArea() {
-    this.cropX = this.cropperState.x;
-    this.cropY = this.cropperState.y;
-    this.cropWidth = this.cropperState.width;
-    this.cropHeight = this.cropperState.height;
+    this.cropX.set(this.cropperState().x);
+    this.cropY.set(this.cropperState().y);
+    this.cropWidth.set(this.cropperState().width);
+    this.cropHeight.set(this.cropperState().height);
   }
 
   cropImage(): void {
     const canvas = document.createElement('canvas');
     const image = new Image();
-    image.src = this.imageSource!;
+    image.src = this.imageSource()!;
     const scale = image.width / this.imageElement.nativeElement.clientWidth;
-    canvas.width = this.cropWidth * scale;
-    canvas.height = this.cropHeight * scale;
+    canvas.width = this.cropWidth() * scale;
+    canvas.height = this.cropHeight() * scale;
     const ctx = canvas.getContext('2d')!;
     ctx.drawImage(
       image,
-      this.cropX * scale,
-      this.cropY * scale,
-      this.cropWidth * scale,
-      this.cropHeight * scale,
+      this.cropX() * scale,
+      this.cropY() * scale,
+      this.cropWidth() * scale,
+      this.cropHeight() * scale,
       0,
       0,
       canvas.width,
       canvas.height
     );
-    this.croppedImageSrc = canvas.toDataURL('image/' + this.imageType);
+    this.croppedImageSrc = canvas.toDataURL('image/' + this.imageType());
     this.imageCroppedEvent.emit(this.croppedImageSrc);
   }
 
   clearImage() {
-    this.imageSource = '';
+    this.imageSource.set('');
     this.croppedImageSrc = '';
     this.setDefaultCropArea();
     this.imageCroppedEvent.emit(this.croppedImageSrc);
@@ -231,7 +230,7 @@ export class ImageCropperComponent implements OnChanges {
       }
 
       const whitePercentage = (whitePixelCount / totalPixels) * 100;
-      this.theme = whitePercentage > this.whitePixelThreshold ? 'dark' : 'light';
+      this.theme.set(whitePercentage > this.whitePixelThreshold() ? 'dark' : 'light');
     };
   }
 }
