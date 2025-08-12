@@ -1,6 +1,6 @@
 {
   "name": "ngx-smart-cropper",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "ngx-smart-cropper is an Angular component designed to provide a user-friendly interface for cropping images with customizable settings. It includes features such as automatic theme detection, drag-and-resize functionality for the crop area, and exporting the cropped image as a base64 string.",
   "author": "Kurt Van den Branden",
   "license": "MIT",
