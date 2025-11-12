@@ -1,12 +1,12 @@
 {
   "name": "ngx-smart-cropper",
-  "version": "1.2.1",
-  "description": "ngx-smart-cropper is an Angular component designed to provide a user-friendly interface for cropping images with customizable settings. It includes features such as automatic theme detection, drag-and-resize functionality for the crop area, and exporting the cropped image as a base64 string.",
+  "version": "1.3.0",
+  "description": "An Angular standalone component that lets users upload, crop and resize images with intuitive drag-resize functionality and grid overlays.",
   "author": "Kurt Van den Branden",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kurti-vdb/ngx-smart-cropper.git"
+    "url": "git+https://github.com/kurti-vdb/ngx-smart-cropper.git"
   },
   "bugs": {
     "url": "https://github.com/kurti-vdb/ngx-smart-cropper/issues"
@@ -15,15 +15,24 @@
   "keywords": [
     "angular",
     "angular image cropper",
-    "cropper",
     "image cropper"
   ],
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "./package.json": { "default": "./package.json" },
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./fesm2022/ngx-smart-cropper.mjs"
+    }
+  },
+  "module": "./fesm2022/ngx-smart-cropper.mjs",
+  "typings": "./index.d.ts",
   "peerDependencies": {
-    "@angular/common": "^19.0.0 || ^20.0.0",
-    "@angular/core": "^19.0.0 || ^20.0.0"
+    "@angular/common": ">=19.0.0 <23.0.0",
+    "@angular/core": ">=19.0.0 <23.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
-  },
-  "sideEffects": false
+  }
 }

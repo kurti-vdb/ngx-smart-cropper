@@ -21,35 +21,34 @@ import {
 })
 export class ImageCropperComponent implements OnChanges {
 
-  startX = 0;
-  startY = 0;
+  private startX = 0;
+  private startY = 0;
+  private isDragging = false;
+  private isResizing = false;
+  private currentHandle: string | null = null;
+  private cropperState = signal({ x: 50, y: 50, width: 150, height: 150 });
 
   showGrid = false;
-  isDragging = false;
-  isResizing = false;
-
   croppedImageSrc: string | null = null;
-  currentHandle: string | null = null;
-
+  
   cropX = model(50);
   cropY = model(50);
   cropWidth = model(150);
   cropHeight = model(150);
   imageSource = model<string | null>(null);
   theme = model<'light' | 'dark' | 'mixed' | 'auto'>('auto');
-
+  
   minCropSize = input(50);
   imagePreviewWidth = input(800);
   whitePixelThreshold = input(20);
-  imageChangedEvent = input<Event | null>(null);
+  aspectRatio = input<number | null>(null);
   imageType = input<'png' | 'jpeg' | 'avif' | 'webp'>('webp');
 
   imageCroppedEvent = output<string>();
+  imageChangedEvent = input<Event | null>(null);
 
   @ViewChild('cropRect') cropRect!: ElementRef;
   @ViewChild('image') imageElement!: ElementRef<HTMLImageElement>;
-
-  cropperState = signal({ x: 50, y: 50, width: 150, height: 150 });
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['imageSource'] && this.imageSource() && this.theme() === 'auto') {
@@ -90,16 +89,23 @@ export class ImageCropperComponent implements OnChanges {
   @HostListener('document:mousemove', ['$event'])
   @HostListener('document:touchmove', ['$event'])
   onMouseMove(event: MouseEvent | TouchEvent): void {
-    const clientX = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].clientX : (event as MouseEvent).clientX;
-    const clientY = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].clientY : (event as MouseEvent).clientY;
+
+    const clientX = (event as TouchEvent).touches
+      ? (event as TouchEvent).touches[0].clientX
+      : (event as MouseEvent).clientX;
+
+    const clientY = (event as TouchEvent).touches
+      ? (event as TouchEvent).touches[0].clientY
+      : (event as MouseEvent).clientY;
 
     if (this.isDragging) {
       this.showGrid = true;
       this.cropX.set(clientX - this.startX);
       this.cropY.set(clientY - this.startY);
       this.enforceBounds();
-    }
+    } 
     else if (this.isResizing) {
+
       this.showGrid = true;
       const dx = clientX - this.startX;
       const dy = clientY - this.startY;
@@ -143,6 +149,11 @@ export class ImageCropperComponent implements OnChanges {
 
       this.startX = clientX;
       this.startY = clientY;
+
+      if (this.aspectRatio() !== null && this.aspectRatio()! > 0) {
+        this.applyAspectRatio();
+      }
+
       this.enforceBounds();
     }
   }
@@ -158,12 +169,23 @@ export class ImageCropperComponent implements OnChanges {
 
   enforceBounds(): void {
     const imageBounds = this.imageElement.nativeElement.getBoundingClientRect();
+
     this.cropWidth.set(Math.max(this.minCropSize(), this.cropWidth()));
     this.cropHeight.set(Math.max(this.minCropSize(), this.cropHeight()));
-    this.cropX.set(Math.min(Math.max(0, this.cropX()), imageBounds.width - this.cropWidth()));
-    this.cropY.set(Math.min(Math.max(0, this.cropY()), imageBounds.height - this.cropHeight()));
-    if (this.cropHeight() >= imageBounds.height) this.cropHeight.set(imageBounds.height);
-    if (this.cropWidth() >= imageBounds.width) this.cropWidth.set(imageBounds.width);
+
+    if (this.cropWidth() > imageBounds.width) {
+      this.cropWidth.set(imageBounds.width);
+    }
+    if (this.cropHeight() > imageBounds.height) {
+      this.cropHeight.set(imageBounds.height);
+    }
+
+    this.cropX.set(
+      Math.min(Math.max(0, this.cropX()), imageBounds.width - this.cropWidth())
+    );
+    this.cropY.set(
+      Math.min(Math.max(0, this.cropY()), imageBounds.height - this.cropHeight())
+    );
   }
 
   setDefaultCropArea() {
@@ -174,6 +196,7 @@ export class ImageCropperComponent implements OnChanges {
   }
 
   cropImage(): void {
+
     const canvas = document.createElement('canvas');
     const image = new Image();
     image.src = this.imageSource()!;
@@ -181,6 +204,7 @@ export class ImageCropperComponent implements OnChanges {
     canvas.width = this.cropWidth() * scale;
     canvas.height = this.cropHeight() * scale;
     const ctx = canvas.getContext('2d')!;
+
     ctx.drawImage(
       image,
       this.cropX() * scale,
@@ -192,6 +216,7 @@ export class ImageCropperComponent implements OnChanges {
       canvas.width,
       canvas.height
     );
+    
     this.croppedImageSrc = canvas.toDataURL('image/' + this.imageType());
     this.imageCroppedEvent.emit(this.croppedImageSrc);
   }
@@ -203,7 +228,15 @@ export class ImageCropperComponent implements OnChanges {
     this.imageCroppedEvent.emit(this.croppedImageSrc);
   }
 
-  detectWhitePixelsAndSetTheme(imageSrc: string): void {
+  private applyAspectRatio(): void {
+    const ratio = this.aspectRatio();
+    if (ratio && ratio > 0) {
+      const newHeight = this.cropWidth() / ratio;
+      this.cropHeight.set(newHeight);
+    }
+  }
+
+  private detectWhitePixelsAndSetTheme(imageSrc: string): void {
 
     const image = new Image();
     image.src = imageSrc;
