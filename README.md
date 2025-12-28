@@ -6,6 +6,12 @@ The **ngx-smart-cropper** component is an Angular standalone component that allo
 
 [**Live Demo → ngx-smart-cropper.upsights.be**](https://ngx-smart-cropper.upsights.be)
 
+ngx-smart-cropper is a lightweight, modern-looking Angular image cropper
+designed for real-world applications.
+
+It is a standalone, mobile-friendly alternative to ngx-image-cropper,
+with a clean UI that is meant to be visible to end users.
+
 ## Features
 - Upload and preview images.
 - Intuitive drag-to-crop and resize handles.
