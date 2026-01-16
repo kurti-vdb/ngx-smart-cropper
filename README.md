@@ -4,7 +4,7 @@ The **ngx-smart-cropper** component is an Angular standalone component that allo
 
 ![ngx-smart-cropper](https://upsights.fra1.digitaloceanspaces.com/ngx-smart-cropper/assets/images/michele-ngx-smart-cropper.jpg)
 
-[**Live Demo → ngx-smart-cropper.upsights.be**](https://ngx-smart-cropper.upsights.be)
+[**Demo**](https://ngx-smart-cropper.upsights.be)
 
 ngx-smart-cropper is a lightweight, modern-looking Angular image cropper
 designed for real-world applications. It is a standalone, mobile-friendly alternative to ngx-image-cropper,
@@ -37,7 +37,7 @@ The `ngx-smart-cropper` library is compatible with the following versions of Ang
 ### 1. Install via npm
 
 ```bash
-npm install ngx-smart-cropper --save
+npm install ngx-smart-cropper
 ```
 
 ## Usage
@@ -120,7 +120,7 @@ export class MyComponent {
 | `imageCroppedEvent` | `EventEmitter<string>` | Emits the cropped image as a Base64 string. |
 
 ## License
-MIT License — see `LICENSE` for details.
+MIT License.
 
 ## Icons
 This project uses free [Tabler Icons](https://tabler.io/icons) for interface elements — modern, customizable SVG icons ideal for any UI.
@@ -129,4 +129,4 @@ This project uses free [Tabler Icons](https://tabler.io/icons) for interface ele
 Feel free to open issues or contribute enhancements on [GitHub](https://github.com/kurti-vdb/ngx-smart-cropper).
 
 ## Demo
-[Live Demo — ngx-smart-cropper.upsights.be](https://ngx-smart-cropper.upsights.be)
+[Demo](https://ngx-smart-cropper.upsights.be)
